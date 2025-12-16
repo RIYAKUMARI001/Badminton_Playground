@@ -19,10 +19,6 @@ Here's what the system looks like:
 
 **Booking Interface**
 <img width="1843" height="882" alt="Screenshot 2025-12-16 125150" src="https://github.com/user-attachments/assets/ab66c66e-66c0-46d0-bb66-df6ef83c2902" />
-
-*Easy booking with clear availability and pricing*
-
-**Booking Management**
 <img width="517" height="713" alt="Screenshot 2025-12-16 125103" src="https://github.com/user-attachments/assets/742da845-595b-40a4-8479-769b741b1cb6" />
 <img width="1215" height="777" alt="Screenshot 2025-12-16 125203" src="https://github.com/user-attachments/assets/e3b7b34f-fafe-4f60-9459-eacbd8aca4aa" />
 <img width="1238" height="748" alt="Screenshot 2025-12-16 125253" src="https://github.com/user-attachments/assets/3e74dd4f-8925-4f2d-ae6a-a34d7e20ed53" />

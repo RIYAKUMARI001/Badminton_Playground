@@ -1,0 +1,96 @@
+body.bg-court {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 25%, #ffffff 50%, #e8f5e9 75%, #c8e6c9 100%);
+    position: relative;
+}
+
+.court-overlay {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(to right, rgba(76, 175, 80, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(76, 175, 80, 0.15) 1px, transparent 1px);
+    background-size: 100px 1px, 1px 100px;
+    opacity: 0.5;
+    z-index: 0;
+}
+
+.glass-nav {
+    backdrop-filter: blur(12px);
+    background: linear-gradient(120deg, rgba(25, 135, 84, 0.97), rgba(22, 160, 133, 0.95));
+}
+
+.hero-card {
+    background: linear-gradient(145deg, #ffffff, #f6fff9);
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(25, 135, 84, 0.12);
+}
+
+.slot-card {
+    border-radius: 1rem;
+    border: 1px solid rgba(25, 135, 84, 0.18);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, #ffffff, #f3fff9);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, translate 0.15s ease;
+}
+
+.slot-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14);
+}
+
+.slot-card.unavailable {
+    opacity: 0.55;
+    filter: grayscale(0.3);
+}
+
+.badge-court {
+    background: linear-gradient(120deg, #198754, #20c997);
+}
+
+.price-pill {
+    background: #0f5132;
+    color: #e9fff5;
+    padding: 0.15rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    box-shadow: 0 0.5rem 1.2rem rgba(15, 81, 50, 0.35);
+}
+
+.form-card {
+    border-radius: 1.25rem;
+    background: linear-gradient(145deg, #ffffff, #f8fff8);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.16);
+    border: 1px solid rgba(25, 135, 84, 0.15);
+}
+
+.table-bookings {
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
+}
+
+.table-bookings thead {
+    background: linear-gradient(120deg, #198754, #20c997);
+    color: #fff;
+}
+
+.table-bookings tbody tr:hover {
+    background-color: rgba(209, 250, 229, 0.65);
+}
+
+.shadow-soft {
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+}
+
+.floating-chip {
+    backdrop-filter: blur(18px);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    padding: 0.5rem 1.2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+

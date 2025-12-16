@@ -1,0 +1,375 @@
+{% extends "booking/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <section class="row g-4">
+        <!-- Left Section: Booking Form -->
+        <div class="col-lg-7">
+            <div class="booking-form-card p-4 shadow-lg">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-check-circle text-success me-2" style="font-size: 1.5rem;"></i>
+                    <h2 class="h4 mb-0 text-success fw-bold">Confirm your booking</h2>
+                </div>
+                <p class="text-muted small mb-4 d-flex align-items-center">
+                    <span class="badge bg-info-subtle text-info me-2">Atomic booking</span>
+                    Everything reserved together
+                </p>
+                
+                {% if error %}
+                    <div class="alert alert-warning alert-dismissible fade show">
+                        {{ error }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+                
+                <form method="post" id="booking-form" class="row g-3">
+                    {% csrf_token %}
+
+                    <div class="col-12">
+                        <label for="{{ form.customer_name.id_for_label }}" class="form-label d-flex align-items-center">
+                            <i class="fas fa-user me-2"></i> {{ form.customer_name.label }}
+                        </label>
+                        {{ form.customer_name }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="{{ form.date.id_for_label }}" class="form-label d-flex align-items-center">
+                            <i class="fas fa-calendar me-2"></i> {{ form.date.label }}
+                        </label>
+                        {{ form.date }}
+                    </div>
+                    <div class="col-md-4">
+                        <label for="{{ form.start_time.id_for_label }}" class="form-label d-flex align-items-center">
+                            <i class="fas fa-clock me-2"></i> {{ form.start_time.label }}
+                        </label>
+                        {{ form.start_time }}
+                    </div>
+                    <div class="col-md-4">
+                        <label for="{{ form.end_time.id_for_label }}" class="form-label d-flex align-items-center">
+                            <i class="fas fa-clock me-2"></i> {{ form.end_time.label }}
+                        </label>
+                        {{ form.end_time }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.court.id_for_label }}" class="form-label d-flex align-items-center">
+                            <i class="fas fa-table-tennis-paddle-ball me-2"></i> {{ form.court.label }}
+                        </label>
+                        {{ form.court }}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.coach.id_for_label }}" class="form-label d-flex align-items-center">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> {{ form.coach.label }}
+                        </label>
+                        {{ form.coach }}
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h3 class="h6 text-success mb-0 fw-bold">Equipment (optional)</h3>
+                            <span class="badge bg-success-subtle text-success">Flexible</span>
+                        </div>
+                        <div class="row g-3">
+                            {% for field in form %}
+                                {% if field.name|slice:":10" == "equipment_" %}
+                                    <div class="col-md-6">
+                                        <div class="form-check form-check-lg p-3 equipment-checkbox">
+                                            {{ field }}
+                                            <label class="form-check-label ms-2" for="{{ field.id_for_label }}">
+                                                {{ field.label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4 pt-3 border-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center text-muted small">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <span>Your booking is confirmed instantly.</span>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg px-5 shadow-lg">
+                                Confirm booking <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Section: Live Price Breakdown -->
+        <div class="col-lg-5">
+            <div class="price-breakdown-card p-4 h-100 shadow-lg">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h5 mb-0 text-white fw-bold">Live price breakdown</h3>
+                    <span class="badge bg-warning text-dark">LIVE</span>
+                </div>
+                <p class="text-white-50 small mb-4">
+                    Based on court type, time, and active rules.
+                </p>
+                
+                <div class="price-total mb-4">
+                    <div class="text-white-50 small mb-1">TOTAL</div>
+                    <div class="display-4 fw-bold text-white" id="price-display">₹ 0.00</div>
+                </div>
+
+                <div class="price-details mb-4" id="price-breakdown">
+                    <div class="price-item d-flex justify-content-between mb-2">
+                        <span class="text-white-50">Court Base</span>
+                        <span class="text-white fw-semibold" id="court-base">₹0.00</span>
+                    </div>
+                    <div class="price-item d-flex justify-content-between mb-2" id="coach-fee-item" style="display: none;">
+                        <span class="text-white-50">Coach Fee</span>
+                        <span class="text-white fw-semibold" id="coach-fee">₹0.00</span>
+                    </div>
+                    <div class="price-item d-flex justify-content-between mb-2" id="equipment-fee-item" style="display: none;">
+                        <span class="text-white-50">Equipment</span>
+                        <span class="text-white fw-semibold" id="equipment-fee">₹0.00</span>
+                    </div>
+                    <div id="rules-breakdown"></div>
+                </div>
+
+                <div class="pricing-info mt-4 pt-4 border-top border-white border-opacity-25">
+                    <div class="text-white-50 small mb-2 fw-semibold">How pricing works</div>
+                    <ul class="small text-white-50 ps-3 mb-0" style="line-height: 1.8;">
+                        <li>Base rate is for a 60-minute session.</li>
+                        <li>Peak hours (6PM-9PM) have a surcharge.</li>
+                        <li>Weekend bookings include a premium.</li>
+                        <li>Indoor courts have an additional premium.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+.booking-form-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 2px solid rgba(76, 175, 80, 0.2);
+}
+
+.booking-form-card .form-label {
+    color: #2e7d32;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.booking-form-card input[type="text"],
+.booking-form-card input[type="date"],
+.booking-form-card input[type="time"],
+.booking-form-card select {
+    background-color: #f8f9fa !important;
+    border: 2px solid rgba(76, 175, 80, 0.3) !important;
+    color: #2e7d32 !important;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.booking-form-card input:focus,
+.booking-form-card select:focus {
+    background-color: #ffffff !important;
+    border-color: #4caf50 !important;
+    color: #2e7d32 !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
+}
+
+.equipment-checkbox {
+    background: #f1f8e9;
+    border: 2px solid rgba(76, 175, 80, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.equipment-checkbox:hover {
+    background: #e8f5e9;
+    border-color: rgba(76, 175, 80, 0.4);
+}
+
+.equipment-checkbox .form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.25rem;
+    border: 2px solid #4caf50;
+}
+
+.equipment-checkbox .form-check-input:checked {
+    background-color: #4caf50;
+    border-color: #4caf50;
+}
+
+.equipment-checkbox .form-check-label {
+    color: #2e7d32;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.price-breakdown-card {
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.price-total {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.price-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price-item:last-child {
+    border-bottom: none;
+}
+
+.rule-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rule-item:last-child {
+    border-bottom: none;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4) !important;
+}
+
+@media (max-width: 992px) {
+    .price-breakdown-card {
+        margin-top: 2rem;
+    }
+}
+</style>
+
+<script>
+    const form = document.getElementById("booking-form");
+    const priceDisplay = document.getElementById("price-display");
+    const courtBaseEl = document.getElementById("court-base");
+    const coachFeeEl = document.getElementById("coach-fee");
+    const coachFeeItem = document.getElementById("coach-fee-item");
+    const equipmentFeeEl = document.getElementById("equipment-fee");
+    const equipmentFeeItem = document.getElementById("equipment-fee-item");
+    const rulesBreakdown = document.getElementById("rules-breakdown");
+
+    function updatePrice() {
+        const date = form.querySelector('input[name="date"]').value;
+        const start = form.querySelector('input[name="start_time"]').value;
+        const end = form.querySelector('input[name="end_time"]').value;
+        const court = form.querySelector('select[name="court"]').value;
+        const coach = form.querySelector('select[name="coach"]')?.value || "";
+        
+        // Get equipment quantities
+        const equipmentQuantities = {};
+        {% for field in form %}
+            {% if field.name|slice:":10" == "equipment_" %}
+                const {{ field.name }} = form.querySelector('[name="{{ field.name }}"]');
+                if ({{ field.name }} && {{ field.name }}.checked) {
+                    equipmentQuantities["{{ field.name }}"] = 1;
+                }
+            {% endif %}
+        {% endfor %}
+        
+        if (!date || !start || !end || !court) {
+            priceDisplay.textContent = "₹ 0.00";
+            return;
+        }
+        
+        const params = new URLSearchParams({
+            date, 
+            start_time: start, 
+            end_time: end, 
+            court, 
+            coach
+        });
+        
+        // Add equipment to params
+        Object.keys(equipmentQuantities).forEach(key => {
+            params.append(key, equipmentQuantities[key]);
+        });
+        
+        fetch("{% url 'booking:pricing_quote' %}?" + params.toString())
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    priceDisplay.textContent = data.error;
+                } else {
+                    priceDisplay.textContent = "₹ " + parseFloat(data.total_price).toFixed(2);
+                    
+                    // Update breakdown
+                    if (data.breakdown) {
+                        courtBaseEl.textContent = "₹" + parseFloat(data.breakdown.base_price || 0).toFixed(2);
+                        
+                        if (data.breakdown.coach_fee && parseFloat(data.breakdown.coach_fee) > 0) {
+                            coachFeeEl.textContent = "₹" + parseFloat(data.breakdown.coach_fee).toFixed(2);
+                            coachFeeItem.style.display = "flex";
+                        } else {
+                            coachFeeItem.style.display = "none";
+                        }
+                        
+                        if (data.breakdown.equipment_fee && parseFloat(data.breakdown.equipment_fee) > 0) {
+                            equipmentFeeEl.textContent = "₹" + parseFloat(data.breakdown.equipment_fee).toFixed(2);
+                            equipmentFeeItem.style.display = "flex";
+                        } else {
+                            equipmentFeeItem.style.display = "none";
+                        }
+                        
+                        // Show rules
+                        if (data.breakdown.rules && data.breakdown.rules.length > 0) {
+                            rulesBreakdown.innerHTML = data.breakdown.rules.map(rule => `
+                                <div class="rule-item d-flex justify-content-between">
+                                    <span class="text-white-50">${rule.name}</span>
+                                    <span class="text-white fw-semibold">+₹${parseFloat(rule.amount).toFixed(2)}</span>
+                                </div>
+                            `).join('');
+                        } else {
+                            rulesBreakdown.innerHTML = '';
+                        }
+                    }
+                }
+            }).catch(() => {
+                priceDisplay.textContent = "Unable to calculate";
+            });
+    }
+
+    // Listen to all form changes
+    ["date", "start_time", "end_time"].forEach(name => {
+        const field = form.querySelector(`[name="${name}"]`);
+        if (field) field.addEventListener("change", updatePrice);
+    });
+    
+    ["court", "coach"].forEach(name => {
+        const field = form.querySelector(`select[name="${name}"]`);
+        if (field) field.addEventListener("change", updatePrice);
+    });
+    
+    // Listen to equipment checkboxes
+    {% for field in form %}
+        {% if field.name|slice:":10" == "equipment_" %}
+            const {{ field.name }}Field = form.querySelector('[name="{{ field.name }}"]');
+            if ({{ field.name }}Field) {
+                {{ field.name }}Field.addEventListener("change", updatePrice);
+            }
+        {% endif %}
+    {% endfor %}
+    
+    window.addEventListener("load", updatePrice);
+</script>
+{% endblock %}

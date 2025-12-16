@@ -1,0 +1,316 @@
+{% extends "booking/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section mb-5">
+    <div class="container-fluid px-4">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="hero-content">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="badge bg-success-subtle text-success px-3 py-2 me-2">
+                            <span class="badge-dot bg-success me-2"></span> Live Bookings
+                        </span>
+                        <span class="text-muted small">24/7 Access</span>
+                    </div>
+                    <h1 class="display-3 fw-bold mb-4" style="color: #2e7d32;">
+                        Book Your <span class="text-success">Court</span>,<br>
+                        Unleash Your <span class="text-success">Game</span>.
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Experience seamless court booking with real-time availability. 
+                        Find your perfect slot, book in seconds, and get ready to play.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'booking:booking_history' %}" class="btn btn-outline-success btn-lg px-4 py-3">
+                            My Bookings
+                        </a>
+                        {% else %}
+                        <a href="{% url 'booking:signup' %}" class="btn btn-outline-success btn-lg px-4 py-3">
+                            Get Started
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image-wrapper text-center">
+                    <img src="{% static 'assest/Riya_Kumari_A_premium_3D_render_of_a_badminton_scene_in_vibrant_emerald_green_14513214-c142-4994-8505-f64fc7cd55d3.jpg' %}" 
+                         alt="Badminton Court" 
+                         class="hero-image img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Booking Section -->
+<section class="row g-4 align-items-stretch mb-4">
+    <div class="col-lg-4">
+        <div class="card shadow-lg border-0 booking-card-3d h-100">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3" style="color: #2e7d32;">Find Your Spot</h5>
+                <form method="get" action="{% url 'booking:availability' %}">
+                    <div class="mb-3">
+                        <label for="date" class="form-label small" style="color: #555;">Select Date</label>
+                        {{ form.date }}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 btn-lg">
+                        View Slots <i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card shadow-lg border-0 booking-card-3d">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0" style="color: #2e7d32;">Available Slots</h5>
+                    <!-- Filter Form -->
+                    <form method="get" action="{% url 'booking:availability' %}" class="d-flex gap-2">
+                        {% if form.date.value %}
+                            <input type="hidden" name="date" value="{{ form.date.value|date:'Y-m-d' }}">
+                        {% endif %}
+                        <select name="court_type" 
+                                class="form-select form-select-sm" 
+                                style="width: auto; background-color: #ffffff !important; border: 2px solid rgba(76, 175, 80, 0.3) !important; color: #2e7d32 !important;"
+                                onchange="this.form.submit()">
+                            <option value="">All Courts</option>
+                            <option value="indoor" {% if court_type_filter == 'indoor' %}selected{% endif %}>Indoor</option>
+                            <option value="outdoor" {% if court_type_filter == 'outdoor' %}selected{% endif %}>Outdoor</option>
+                        </select>
+                        <input type="text" 
+                               name="search"
+                               value="{{ search_query }}"
+                               class="form-control form-control-sm" 
+                               placeholder="Search court..." 
+                               style="width: 200px; background-color: #ffffff !important; border: 2px solid rgba(76, 175, 80, 0.3) !important; color: #2e7d32 !important;"
+                               onkeypress="if(event.keyCode==13) {this.form.submit(); return false;}">
+                        <button type="submit" class="btn btn-sm btn-success">Apply</button>
+                        {% if court_type_filter or search_query %}
+                            <a href="{% url 'booking:availability' %}{% if form.date.value %}?date={{ form.date.value|date:'Y-m-d' }}{% endif %}" 
+                               class="btn btn-sm btn-outline-secondary" 
+                               style="border-color: rgba(76, 175, 80, 0.3); color: #2e7d32;">
+                                Clear
+                            </a>
+                        {% endif %}
+                    </form>
+                </div>
+
+                {% if slots %}
+                    {% if court_type_filter or search_query %}
+                        <div class="alert alert-info mb-3" style="background-color: #e8f5e9; border-color: #4caf50; color: #2e7d32;">
+                            <small>
+                                {% if court_type_filter %}Filter: <strong>{{ court_type_filter|title }}</strong>{% endif %}
+                                {% if search_query %}Search: <strong>"{{ search_query }}"</strong>{% endif %}
+                                - Showing {{ slots|length }} slot{{ slots|length|pluralize }}
+                            </small>
+                        </div>
+                    {% endif %}
+                    <div class="row g-3">
+                        {% for slot in slots %}
+                            <div class="col-md-6">
+                                <div class="slot-card-modern p-3 {% if not slot.available %}unavailable{% endif %}">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fw-semibold" style="color: #2e7d32;">
+                                            {{ slot.start|time:"g:i a" }} - {{ slot.end|time:"g:i a" }}
+                                        </span>
+                                        <span class="badge {% if slot.court.court_type == 'indoor' %}bg-success{% else %}bg-info{% endif %}">
+                                            {{ slot.court.get_court_type_display }}
+                                        </span>
+                                    </div>
+                                    <h6 class="mb-2" style="color: #2e7d32;">{{ slot.court.name }}</h6>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        {% if slot.available %}
+                                            <a href="{% url 'booking:create_booking' %}?date={{ slot.date|date:'Y-m-d' }}&start={{ slot.start }}&end={{ slot.end }}&court={{ slot.court.id }}"
+                                               class="btn btn-success btn-sm">
+                                                Book Slot
+                                            </a>
+                                            <span class="text-success small fw-semibold">Available</span>
+                                        {% else %}
+                                            <span class="btn btn-secondary btn-sm disabled">Booked</span>
+                                            <span class="text-muted small">Unavailable</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% elif form.is_bound %}
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-3">
+                            {% if court_type_filter or search_query %}
+                                No slots found matching your filters. Try adjusting your search or filters.
+                            {% else %}
+                                No slots found for this date. Try another day.
+                            {% endif %}
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <p class="text-muted mb-3">Select a date to view available slots</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.hero-section {
+    padding: 4rem 0;
+    position: relative;
+    background: transparent;
+}
+
+.min-vh-75 {
+    min-height: 60vh;
+}
+
+.hero-content {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-content h1 {
+    color: #2e7d32 !important;
+}
+
+.hero-content .text-success {
+    color: #4caf50 !important;
+}
+
+.hero-content .text-white-50 {
+    color: #555 !important;
+}
+
+.hero-image-wrapper {
+    position: relative;
+    animation: fadeInRight 0.8s ease-out;
+}
+
+.hero-image {
+    max-height: 500px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(76, 175, 80, 0.4));
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.badge-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.booking-card-3d {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.booking-card-3d:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(76, 175, 80, 0.35) !important;
+}
+
+.booking-card-3d .card-title {
+    color: #2e7d32 !important;
+}
+
+.booking-card-3d .text-white-50 {
+    color: #555 !important;
+}
+
+.slot-card-modern {
+    background: linear-gradient(135deg, #ffffff 0%, #e8f5e9 100%);
+    border: 2px solid rgba(76, 175, 80, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.slot-card-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+.slot-card-modern .text-white {
+    color: #2e7d32 !important;
+}
+
+.slot-card-modern.unavailable {
+    opacity: 0.6;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    border-color: rgba(158, 158, 158, 0.4);
+}
+
+.slot-card-modern.unavailable .text-white {
+    color: #757575 !important;
+}
+
+#id_date {
+    background-color: #ffffff !important;
+    border: 2px solid rgba(76, 175, 80, 0.5) !important;
+    color: #2e7d32 !important;
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+
+#id_date:focus {
+    background-color: #ffffff !important;
+    border-color: #4caf50 !important;
+    color: #2e7d32 !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
+}
+
+.form-select-sm.bg-dark,
+.form-control-sm.bg-dark {
+    background-color: #ffffff !important;
+    border: 2px solid rgba(76, 175, 80, 0.3) !important;
+    color: #2e7d32 !important;
+}
+
+.form-select-sm.bg-dark:focus,
+.form-control-sm.bg-dark:focus {
+    border-color: #4caf50 !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
+}
+</style>
+{% endblock %}

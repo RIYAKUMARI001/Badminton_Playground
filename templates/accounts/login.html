@@ -1,0 +1,119 @@
+{% extends "booking/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <section class="row justify-content-center py-5">
+        <div class="col-md-6 col-lg-5">
+            <div class="login-form-card p-5 shadow-lg">
+                <div class="text-center mb-4">
+                    <h1 class="h3 text-success fw-bold mb-2">Welcome back</h1>
+                    <p class="text-muted small mb-3">Log in to manage your badminton bookings and see your history.</p>
+                    <span class="badge bg-success-subtle text-success px-3 py-2">Secure access</span>
+                </div>
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger py-2 small">
+                        Invalid username or password. Please try again.
+                    </div>
+                {% endif %}
+                
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label text-dark fw-semibold">
+                            Username
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            {{ form.username }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label text-dark fw-semibold">
+                            Password
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            {{ form.password }}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg shadow-lg">
+                            Log in <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <p class="small text-center text-muted mt-4 mb-0">
+                    New here?
+                    <a href="{% url 'booking:signup' %}" class="text-success fw-semibold">Create an account</a>
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+.login-form-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 2px solid rgba(76, 175, 80, 0.2);
+}
+
+.login-form-card .form-label {
+    color: #2e7d32;
+    margin-bottom: 0.5rem;
+}
+
+.login-form-card .form-control {
+    background-color: #f8f9fa !important;
+    border: 2px solid rgba(76, 175, 80, 0.3) !important;
+    color: #2e7d32 !important;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.login-form-card .form-control:focus {
+    background-color: #ffffff !important;
+    border-color: #4caf50 !important;
+    color: #2e7d32 !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
+}
+
+.login-form-card .input-group-text {
+    border: 2px solid rgba(76, 175, 80, 0.3) !important;
+    border-right: none !important;
+    background-color: #f8f9fa !important;
+    border-radius: 8px 0 0 8px !important;
+}
+
+.login-form-card .input-group .form-control {
+    border-left: none !important;
+    border-radius: 0 8px 8px 0 !important;
+}
+
+.login-form-card .input-group .form-control:focus {
+    border-left: 2px solid #4caf50 !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4) !important;
+}
+</style>
+{% endblock %}

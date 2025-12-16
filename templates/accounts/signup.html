@@ -1,0 +1,246 @@
+{% extends "booking/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <section class="row justify-content-center py-5">
+        <div class="col-md-6 col-lg-5">
+            <div class="signup-form-card p-5 shadow-lg">
+                <div class="text-center mb-4">
+                    <h1 class="h3 text-success fw-bold mb-2">Create your account</h1>
+                    <p class="text-muted small mb-3">Join us and start your journey today.</p>
+                    <span class="badge bg-success-subtle text-success px-3 py-2">Quick setup</span>
+                </div>
+                
+                <form method="post" id="signupForm" class="mt-4">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label text-dark fw-semibold">
+                            Username
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            {{ form.username }}
+                        </div>
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label text-dark fw-semibold">
+                            Email Address
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            {{ form.email }}
+                        </div>
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label text-dark fw-semibold">
+                            Password
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            {{ form.password1 }}
+                        </div>
+                        <div id="password-strength" class="mt-2" style="display: none;">
+                            <div class="progress" style="height: 4px;">
+                                <div id="strength-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div id="strength-text" class="small mt-1"></div>
+                        </div>
+                        {% if form.password1.errors %}
+                            <div class="text-danger small mt-1 d-flex align-items-center">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                {{ form.password1.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label text-dark fw-semibold">
+                            Confirm Password
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            {{ form.password2 }}
+                        </div>
+                        {% if form.password2.errors %}
+                            <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg shadow-lg">
+                            Sign up <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <p class="small text-center text-muted mt-4 mb-0">
+                    Already have an account?
+                    <a href="{% url 'booking:login' %}" class="text-success fw-semibold">Log in</a>
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+.signup-form-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 2px solid rgba(76, 175, 80, 0.2);
+}
+
+.signup-form-card .form-label {
+    color: #2e7d32;
+    margin-bottom: 0.5rem;
+}
+
+.signup-form-card .form-control {
+    background-color: #f8f9fa !important;
+    border: 2px solid rgba(76, 175, 80, 0.3) !important;
+    color: #2e7d32 !important;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.signup-form-card .form-control:focus {
+    background-color: #ffffff !important;
+    border-color: #4caf50 !important;
+    color: #2e7d32 !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
+}
+
+.signup-form-card .input-group-text {
+    border: 2px solid rgba(76, 175, 80, 0.3) !important;
+    border-right: none !important;
+    background-color: #f8f9fa !important;
+    border-radius: 8px 0 0 8px !important;
+}
+
+.signup-form-card .input-group .form-control {
+    border-left: none !important;
+    border-radius: 0 8px 8px 0 !important;
+}
+
+.signup-form-card .input-group .form-control:focus {
+    border-left: 2px solid #4caf50 !important;
+}
+
+.signup-form-card .form-control.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+#password-strength .progress {
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+#strength-bar.progress-bar {
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4) !important;
+}
+</style>
+
+<script>
+    const password1 = document.getElementById('{{ form.password1.id_for_label }}');
+    const password2 = document.getElementById('{{ form.password2.id_for_label }}');
+    const strengthDiv = document.getElementById('password-strength');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthText = document.getElementById('strength-text');
+    
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        let feedback = [];
+        
+        if (password.length >= 8) {
+            strength += 1;
+        } else {
+            feedback.push('Password must be at least 8 characters.');
+        }
+        
+        if (password.length >= 12) strength += 1;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+        if (/[0-9]/.test(password)) strength += 1;
+        if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+        
+        return { strength, feedback };
+    }
+    
+    password1.addEventListener('input', function() {
+        const password = this.value;
+        if (password.length > 0) {
+            strengthDiv.style.display = 'block';
+            const { strength, feedback } = checkPasswordStrength(password);
+            
+            let width = (strength / 5) * 100;
+            let color = '#dc3545'; // Red
+            let text = 'Weak';
+            
+            if (strength >= 4) {
+                color = '#4caf50'; // Green
+                text = 'Strong';
+            } else if (strength >= 2) {
+                color = '#ffc107'; // Yellow
+                text = 'Medium';
+            }
+            
+            strengthBar.style.width = width + '%';
+            strengthBar.style.backgroundColor = color;
+            strengthBar.className = 'progress-bar';
+            
+            if (feedback.length > 0) {
+                strengthText.innerHTML = '<span style="color: ' + color + ';">' + text + '</span> - ' + feedback[0];
+            } else {
+                strengthText.innerHTML = '<span style="color: ' + color + ';">' + text + '</span>';
+            }
+            
+            // Add error styling if weak
+            if (strength < 2) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        } else {
+            strengthDiv.style.display = 'none';
+            this.classList.remove('is-invalid');
+        }
+    });
+    
+    password2.addEventListener('input', function() {
+        if (password1.value !== this.value && this.value.length > 0) {
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Badminton Booking Administration Dashboard</h1>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="module">
+                <h2><i class="fas fa-calendar-alt me-2"></i>Recent Bookings</h2>
+                <div class="module-content">
+                    {% if booking_list %}
+                        <ul class="actionlist">
+                            {% for booking in booking_list %}
+                                <li class="action-item">
+                                    <span class="action-time">{{ booking.created_at|date:"M d, H:i" }}</span>
+                                    <span class="action-name">{{ booking.customer_name }}</span>
+                                    <span class="action-desc">{{ booking.court.name }} - {{ booking.date }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No recent bookings.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="module">
+                <h2><i class="fas fa-users me-2"></i>User Statistics</h2>
+                <div class="module-content">
+                    <ul class="actionlist">
+                        <li class="action-item">
+                            <span class="action-name">Total Users</span>
+                            <span class="action-desc">{{ user_count }} registered users</span>
+                        </li>
+                        <li class="action-item">
+                            <span class="action-name">Active Today</span>
+                            <span class="action-desc">{{ active_users_today }} users</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="module">
+                <h2><i class="fas fa-chart-line me-2"></i>Revenue Overview</h2>
+                <div class="module-content">
+                    <ul class="actionlist">
+                        <li class="action-item">
+                            <span class="action-name">Today</span>
+                            <span class="action-desc">₹{{ revenue_today }}</span>
+                        </li>
+                        <li class="action-item">
+                            <span class="action-name">This Week</span>
+                            <span class="action-desc">₹{{ revenue_week }}</span>
+                        </li>
+                        <li class="action-item">
+                            <span class="action-name">This Month</span>
+                            <span class="action-desc">₹{{ revenue_month }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="module">
+                <h2><i class="fas fa-tasks me-2"></i>System Status</h2>
+                <div class="module-content">
+                    <ul class="actionlist">
+                        <li class="action-item">
+                            <span class="action-name">Courts</span>
+                            <span class="action-desc">{{ court_count }} active courts</span>
+                        </li>
+                        <li class="action-item">
+                            <span class="action-name">Equipment</span>
+                            <span class="action-desc">{{ equipment_count }} items</span>
+                        </li>
+                        <li class="action-item">
+                            <span class="action-name">Coaches</span>
+                            <span class="action-desc">{{ coach_count }} available</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="module">
+                <h2><i class="fas fa-clock me-2"></i>Waitlist</h2>
+                <div class="module-content">
+                    {% if waitlist_count > 0 %}
+                        <p>{{ waitlist_count }} customers on waitlist</p>
+                        <a href="{% url 'admin:booking_waitlistentry_changelist' %}" class="button">View Waitlist</a>
+                    {% else %}
+                        <p>No customers on waitlist</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard h1 {
+    color: #2E7D32 !important;
+    margin-bottom: 25px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 2px solid #E8F5E9 !important;
+    font-size: 28px !important;
+    font-weight: 600 !important;
+}
+
+.dashboard .module {
+    margin-bottom: 20px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
+.dashboard .module h2 {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32) !important;
+    color: white !important;
+    padding: 15px !important;
+    margin: 0 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+}
+
+.module-content {
+    padding: 15px !important;
+    background: white !important;
+}
+
+.actionlist {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.action-item {
+    padding: 10px 0 !important;
+    border-bottom: 1px solid #eee !important;
+}
+
+.action-item:last-child {
+    border-bottom: none !important;
+}
+
+.action-time {
+    font-size: 12px !important;
+    color: #757575 !important;
+    display: block !important;
+}
+
+.action-name {
+    font-weight: 600 !important;
+    color: #212121 !important;
+}
+
+.action-desc {
+    font-size: 14px !important;
+    color: #757575 !important;
+}
+
+.row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    margin: 0 -10px !important;
+}
+
+.col-md-4 {
+    flex: 0 0 33.333333% !important;
+    max-width: 33.333333% !important;
+    padding: 0 10px !important;
+}
+
+@media (max-width: 992px) {
+    .col-md-4 {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .row {
+        margin: 0 !important;
+    }
+    
+    .col-md-4 {
+        padding: 0 0 20px 0 !important;
+    }
+}
+</style>
+{% endblock %}

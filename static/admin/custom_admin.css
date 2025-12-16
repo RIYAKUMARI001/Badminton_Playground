@@ -1,0 +1,318 @@
+/* Modern Django Admin Styling */
+
+:root {
+    --primary: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #C8E6C9;
+    --secondary: #2E7D32;
+    --accent: #81C784;
+    --background: #f5f5f5;
+    --surface: #ffffff;
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --border: #e0e0e0;
+    --success: #4CAF50;
+    --warning: #FFC107;
+    --error: #F44336;
+    --info: #2196F3;
+}
+
+/* Global Styles */
+body {
+    background-color: var(--background) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* Header */
+#header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    color: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    padding: 0 30px !important;
+    height: 64px !important;
+}
+
+#branding h1 {
+    margin: 0 !important;
+    padding: 15px 0 !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+#user-tools {
+    color: rgba(255, 255, 255, 0.9) !important;
+    padding: 20px 0 !important;
+    font-size: 14px !important;
+}
+
+#user-tools a {
+    color: white !important;
+    text-decoration: underline !important;
+}
+
+/* Breadcrumbs */
+div.breadcrumbs {
+    background: var(--primary-light) !important;
+    color: var(--secondary) !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding: 12px 30px !important;
+    font-size: 14px !important;
+}
+
+div.breadcrumbs a {
+    color: var(--secondary) !important;
+    text-decoration: none !important;
+}
+
+div.breadcrumbs a:hover {
+    text-decoration: underline !important;
+}
+
+/* Main Content */
+#content {
+    background-color: var(--background) !important;
+    padding: 20px 30px !important;
+}
+
+#content-main {
+    background: var(--surface) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    padding: 20px !important;
+    margin-bottom: 30px !important;
+}
+
+/* Modules */
+.module {
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    margin-bottom: 20px !important;
+    background: var(--surface) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.module h2 {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    color: white !important;
+    padding: 15px 20px !important;
+    margin: 0 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+/* Tables */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background: var(--surface) !important;
+}
+
+table thead th {
+    background: var(--primary-light) !important;
+    color: var(--secondary) !important;
+    padding: 12px 15px !important;
+    border-bottom: 2px solid var(--primary) !important;
+    text-align: left !important;
+    font-weight: 600 !important;
+}
+
+table tbody td {
+    padding: 12px 15px !important;
+    border-bottom: 1px solid var(--border) !important;
+    vertical-align: top !important;
+}
+
+table tbody tr:hover {
+    background-color: var(--primary-light) !important;
+}
+
+.row1 {
+    background: var(--surface) !important;
+}
+
+.row2 {
+    background: #fafafa !important;
+}
+
+/* Buttons */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: var(--primary) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+    background: var(--primary-dark) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+    background: var(--secondary) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+    background: #1B5E20 !important;
+}
+
+/* Forms */
+.form-row {
+    padding: 15px 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.form-row:last-child {
+    border-bottom: none !important;
+}
+
+label {
+    display: block !important;
+    margin-bottom: 5px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+}
+
+input, select, textarea {
+    width: 100% !important;
+    padding: 10px 12px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    background: var(--surface) !important;
+    transition: border 0.3s ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+}
+
+/* Sidebar */
+#nav-sidebar {
+    background: var(--surface) !important;
+    border-right: 1px solid var(--border) !important;
+    padding: 20px 0 !important;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05) !important;
+}
+
+#nav-sidebar .module h2 {
+    background: var(--secondary) !important;
+    color: white !important;
+    padding: 15px 20px !important;
+    margin: 0 0 10px 0 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+}
+
+.model-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.model-list li {
+    margin: 0 !important;
+}
+
+.model-list li a {
+    display: block !important;
+    padding: 12px 20px !important;
+    color: var(--text-primary) !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    transition: all 0.2s ease !important;
+}
+
+.model-list li a:hover {
+    background: var(--primary-light) !important;
+    color: var(--secondary) !important;
+    padding-left: 25px !important;
+}
+
+/* Dashboard */
+.dashboard .module {
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    margin-bottom: 20px !important;
+    background: var(--surface) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dashboard .module h2 {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    margin: 0 !important;
+    padding: 15px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+/* Action list */
+.actionlist {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.action-item {
+    padding: 12px 15px !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.action-item:last-child {
+    border-bottom: none !important;
+}
+
+.action-time {
+    font-size: 12px !important;
+    color: var(--text-secondary) !important;
+    display: block !important;
+    margin-bottom: 3px !important;
+}
+
+.action-name {
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    display: block !important;
+    margin-bottom: 3px !important;
+}
+
+.action-desc {
+    font-size: 14px !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #header {
+        padding: 0 15px !important;
+    }
+    
+    div.breadcrumbs {
+        padding: 10px 15px !important;
+    }
+    
+    #content {
+        padding: 10px 15px !important;
+    }
+    
+    #content-main {
+        padding: 15px !important;
+    }
+}

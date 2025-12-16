@@ -74,5 +74,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = "booking:login"
 LOGIN_REDIRECT_URL = "booking:availability"
-
-

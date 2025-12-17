@@ -13,7 +13,12 @@ ALLOWED_HOSTS_ENV = os.getenv("DJANGO_ALLOWED_HOSTS")
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS: list[str] = [h.strip() for h in ALLOWED_HOSTS_ENV.split(",") if h.strip()]
 else:
+    # default allow localhost and Railway-style hosts (will typically be set via env)
     ALLOWED_HOSTS: list[str] = ["127.0.0.1", "localhost"]
+
+CSRF_TRUSTED_ORIGINS_ENV = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS")
+if CSRF_TRUSTED_ORIGINS_ENV:
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in CSRF_TRUSTED_ORIGINS_ENV.split(",") if o.strip()]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
